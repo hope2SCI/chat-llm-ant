@@ -12,7 +12,8 @@
     </div>
 
     <div v-if="!collapsed" class="sidebarList">
-      <a-empty v-if="conversations.length === 0" description="暂无对话，点击新建对话开始。" />
+      <div v-if="conversations.length === 0">
+        </div>
 
       <div v-else class="list">
         <div

@@ -1,6 +1,11 @@
 <template>
   <div ref="listRef" class="messageList">
-    <a-empty v-if="messages.length === 0" :description="emptyText" />
+    <div style="flex: 1;display:flex; align-items:center;justify-content: center;" v-if="messages.length === 0">
+      <div style="color:#aaa;text-align: center;">
+        没有对话记录<br /><br />
+      输入内容并发送以开始新对话
+      </div>
+    </div>
 
     <div v-else class="messages">
       <ChatMessage
@@ -70,11 +75,13 @@ watch(
 
 <style scoped>
 .messageList {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow: auto;
   padding: 8px 16px 0;
-  background: var(--chat-main-bg);
+  background: var(--chat-surface);
 }
 
 .messages {
