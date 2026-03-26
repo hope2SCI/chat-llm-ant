@@ -15,7 +15,6 @@ declare module 'vue' {
     AButton: typeof import('ant-design-vue/es')['Button']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     ADropdown: typeof import('ant-design-vue/es')['Dropdown']
-    AEmpty: typeof import('ant-design-vue/es')['Empty']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     AModal: typeof import('ant-design-vue/es')['Modal']
@@ -28,8 +27,6 @@ declare module 'vue' {
     ChatMessage: typeof import('./src/components/chat/ChatMessage.vue')['default']
     Composer: typeof import('./src/components/chat/Composer.vue')['default']
     MessageList: typeof import('./src/components/chat/MessageList.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
     SidebarConversations: typeof import('./src/components/chat/SidebarConversations.vue')['default']
   }
 }

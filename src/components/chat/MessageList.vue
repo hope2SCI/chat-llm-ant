@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { ChatMessage as ChatMessageType } from '../../types/chat'
 import ChatMessage from './ChatMessage.vue'
 
@@ -33,8 +33,6 @@ const props = defineProps<{
 
 const listRef = ref<HTMLDivElement | null>(null)
 const bottomRef = ref<HTMLDivElement | null>(null)
-
-const emptyText = computed(() => '开始一段对话吧')
 
 const shouldAutoScroll = ref(true)
 

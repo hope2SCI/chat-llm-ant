@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { requestChatCompletion } from '../api/chat'
+import { requestChatCompletionStream } from '../api/chat'
 import {
   clearConversationsFromDb,
   deleteConversationFromDb,
@@ -227,13 +227,22 @@ export const useChatStore = defineStore('chat', {
 
       try {
         const apiMessages = this.buildApiMessages(conversationId)
-        const reply = await requestChatCompletion({
+        let streamedText = ''
+
+        await requestChatCompletionStream({
           messages: apiMessages,
           signal: abortController.signal,
+          onDelta: delta => {
+            if (inFlightAssistantMessageId !== assistantId) return
+            streamedText += delta
+            this.patchAssistant(conversationId, assistantId, streamedText, 'streaming')
+          },
         })
 
         if (inFlightAssistantMessageId !== assistantId) return
-        this.patchAssistant(conversationId, assistantId, reply || '（空响应）', 'done')
+
+        const finalText = streamedText.trim() ? streamedText : '（空响应）'
+        this.patchAssistant(conversationId, assistantId, finalText, 'done')
         await this.saveConversation(conversationId)
       } catch (err) {
         if (inFlightAssistantMessageId !== assistantId) return
@@ -292,13 +301,22 @@ export const useChatStore = defineStore('chat', {
 
       try {
         const apiMessages = this.buildApiMessages(conv.id)
-        const reply = await requestChatCompletion({
+        let streamedText = ''
+
+        await requestChatCompletionStream({
           messages: apiMessages,
           signal: abortController.signal,
+          onDelta: delta => {
+            if (inFlightAssistantMessageId !== lastAssistant.id) return
+            streamedText += delta
+            this.patchAssistant(conv.id, lastAssistant.id, streamedText, 'streaming')
+          },
         })
 
         if (inFlightAssistantMessageId !== lastAssistant.id) return
-        this.patchAssistant(conv.id, lastAssistant.id, reply || '（空响应）', 'done')
+
+        const finalText = streamedText.trim() ? streamedText : '（空响应）'
+        this.patchAssistant(conv.id, lastAssistant.id, finalText, 'done')
         await this.saveConversation(conv.id)
       } catch (err) {
         if (inFlightAssistantMessageId !== lastAssistant.id) return
