@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       vue(),
       AutoImport({
         // 自动导入常用 API，减少每个 .vue 手动 import
-        imports: ['vue', 'vue-router', 'pinia'],
+        imports: ['vue', 'pinia'],
         dts: 'src/auto-imports.d.ts',
       }),
       Components({

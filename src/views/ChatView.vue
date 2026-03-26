@@ -13,22 +13,26 @@
           </div>
         </div>
 
-        <a-dropdown :trigger="['click']" placement="bottomRight">
-          <a-button type="text" class="headerSettingBtn" title="对话设置">
-            <SettingOutlined />
-          </a-button>
+        <div class="headerActions">
+          <a-select v-model:value="mode" size="small" class="themeSelect" :options="themeOptions" />
 
-          <template #overlay>
-            <a-menu>
-              <a-menu-item key="clear" danger @click="onClearAllConversations">
-                清空数据
-              </a-menu-item>
-              <a-menu-item key="setting" @click="openSettingsModal">
-                设置
-              </a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
+          <a-dropdown :trigger="['click']" placement="bottomRight">
+            <a-button type="text" class="headerSettingBtn" title="对话设置">
+              <SettingOutlined />
+            </a-button>
+
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="clear" danger @click="onClearAllConversations">
+                  清空数据
+                </a-menu-item>
+                <a-menu-item key="setting" @click="openSettingsModal">
+                  设置
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </div>
       </div>
 
       <MessageList
@@ -64,20 +68,35 @@
 </template>
 
 <script setup lang="ts">
+import type { ThemeMode } from '../stores/theme'
 import { computed, onMounted, ref } from 'vue'
 import { message as antMessage, Modal } from 'ant-design-vue'
 import { SettingOutlined } from '@ant-design/icons-vue'
 import { useChatStore } from '../stores/chat'
+import { useThemeStore } from '../stores/theme'
 import SidebarConversations from '../components/chat/SidebarConversations.vue'
 import MessageList from '../components/chat/MessageList.vue'
 import Composer from '../components/chat/Composer.vue'
 
 const chatStore = useChatStore()
+const themeStore = useThemeStore()
+
 const sidebarCollapsed = ref(false)
 const settingsModalOpen = ref(false)
 const settings = ref({
   autoScroll: true,
   sendKeyMode: 'enter',
+})
+
+const themeOptions = [
+  { label: '浅色', value: 'light' },
+  { label: '深色', value: 'dark' },
+  { label: '跟随系统', value: 'system' },
+]
+
+const mode = computed({
+  get: () => themeStore.mode,
+  set: (v: ThemeMode) => themeStore.setMode(v),
 })
 
 onMounted(() => {
@@ -118,7 +137,7 @@ const messages = computed(() => selectedConversation.value?.messages ?? [])
 <style scoped>
 .chatPage {
   display: flex;
-  height: calc(100svh - 64px - 32px);
+  height: 100svh;
 }
 
 .main {
@@ -147,6 +166,16 @@ const messages = computed(() => selectedConversation.value?.messages ?? [])
   font-size: 12px;
   color: var(--chat-text-secondary);
   margin-top: 4px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.themeSelect {
+  width: 116px;
 }
 
 .headerSettingBtn {
